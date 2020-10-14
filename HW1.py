@@ -29,18 +29,13 @@ tmp = fp_testLabel.read(8)
 # -----------------------------------
 
 train_x, train_y, classes = Loader.load(50, fp_trainImage, fp_trainLabel)
-test_x, test_y, classes = Loader.load(5, fp_testImage, fp_testLabel)
-
-print ("train_x's shape: " + str(train_x.shape))
-print ("test_x's shape: " + str(test_x.shape))
-print ("train_y's shape: " + str(train_y.shape))
-print ("test_y's shape: " + str(test_y.shape))
+test_x, test_y, classes = Loader.load(50, fp_testImage, fp_testLabel)
 
 n_x = 28*28     # num_px * num_px * 3
 n_h = 2
 n_y = 10
 layers_dims = (n_x, n_h, n_y)
 
-parameters = nw.two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 2500, print_cost=True)
+parameters = nw.two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 2800, print_cost=True)
 
 pred_train = util.predict(train_x, train_y, parameters)

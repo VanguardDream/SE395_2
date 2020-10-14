@@ -2,6 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
+def softmax(X):
+    exps = np.exp(X)
+    A = exps / np.sum(exps)
+    cache = X
+    return A, X
+
+def softmax_grad(softmax):
+    s = softmax.reshape(-1,1)
+    return np.diagflat(s) - np.dot(s, s.T)
 
 def sigmoid(Z):
     """
@@ -82,6 +91,17 @@ def sigmoid_backward(dA, cache):
     assert (dZ.shape == Z.shape)
     
     return dZ
+
+def softmax_backward(dA, cache):
+
+    Z = cache
+    # s = 1 / (dA * (1 - dA))
+    s = np.divide(1, (dA * (1 - dA)))
+
+    assert (s.shape == Z.shape)
+
+    return s
+
 
 
 def load_data():
@@ -207,6 +227,10 @@ def linear_activation_forward(A_prev, W, b, activation):
         # Inputs: "A_prev, W, b". Outputs: "A, activation_cache".
         Z, linear_cache = linear_forward(A_prev, W, b)
         A, activation_cache = relu(Z)
+
+    elif activation == "softmax":
+        Z, linear_cache = linear_forward(A_prev,W,b)
+        A, activation_cache = softmax(Z)
     
     assert (A.shape == (W.shape[0], A_prev.shape[1]))
     cache = (linear_cache, activation_cache)
@@ -261,12 +285,14 @@ def compute_cost(AL, Y):
     m = Y.shape[1]
 
     # Compute loss from aL and y.
-    cost = (1./m) * (-np.dot(Y,np.log(AL).T) - np.dot(1-Y, np.log(1-AL).T))
+    cost = (-1/m) * np.sum(Y * np.log(AL) + (1 - Y) * (np.log(1 - AL)))
+    # cost = (1./m) * (-np.dot(Y,np.log(AL).T) - np.dot(1-Y, np.log(1-AL).T))
     
     cost = np.squeeze(cost)      # To make sure your cost's shape is what we expect (e.g. this turns [[17]] into 17).
     # assert(cost.shape == ())
     
     return cost
+
 
 def linear_backward(dZ, cache):
     """
@@ -316,6 +342,10 @@ def linear_activation_backward(dA, cache, activation):
         
     elif activation == "sigmoid":
         dZ = sigmoid_backward(dA, activation_cache)
+        dA_prev, dW, db = linear_backward(dZ, linear_cache)
+
+    elif activation == "softmax":
+        dZ = softmax_backward(dA, activation_cache)
         dA_prev, dW, db = linear_backward(dZ, linear_cache)
     
     return dA_prev, dW, db
@@ -400,9 +430,6 @@ def predict(X, y, parameters):
     
     # Forward propagation
     probas, caches = L_model_forward(X, parameters)
-
-    print(probas.shape)
-    print(probas[0])
 
     # convert probas to 0/1 predictions
     for i in range(0, probas.shape[1]):

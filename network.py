@@ -40,20 +40,27 @@ def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 
         # Forward propagation: LINEAR -> RELU -> LINEAR -> SIGMOID. Inputs: "X, W1, b1". Output: "A1, cache1, A2, cache2".
         ### START CODE HERE ### (≈ 2 lines of code)
         A1, cache1 = linear_activation_forward(X, W1, b1, 'relu')
-        A2, cache2 = linear_activation_forward(A1, W2, b2, 'sigmoid')
+        A2, cache2 = linear_activation_forward(A1, W2, b2, 'softmax')
         ### END CODE HERE ###
         
         # Compute cost
         ### START CODE HERE ### (≈ 1 line of code)
-        cost = compute_cost(A2, Y)
+        cost = compute_cost(A2, Y) #cross entropy loss
+
         ### END CODE HERE ###
         
         # Initializing backward propagation
-        dA2 = - (np.divide(Y, A2) - np.divide(1 - Y, 1 - A2))
+        dA2 = A2 * (Y-A2)
+
+        # dA2 = - (np.divide(Y, A2) - np.divide(1 - Y, 1 - A2))
+
+        #Softmax Initailizing backward progagation
+        
+
         
         # Backward propagation. Inputs: "dA2, cache2, cache1". Outputs: "dA1, dW2, db2; also dA0 (not used), dW1, db1".
         ### START CODE HERE ### (≈ 2 lines of code)
-        dA1, dW2, db2 = linear_activation_backward(dA2, cache2, 'sigmoid')
+        dA1, dW2, db2 = linear_activation_backward(dA2, cache2, 'softmax')
         dA0, dW1, db1 = linear_activation_backward(dA1, cache1, 'relu')
         ### END CODE HERE ###
         
