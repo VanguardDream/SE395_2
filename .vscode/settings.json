@@ -1,4 +1,4 @@
 {
     "python.dataScience.jupyterServerURI": "local",
-    "python.pythonPath": ".SE395/bin/python"
+    "python.pythonPath": ".SE395\\Scripts\\python.exe"
 }

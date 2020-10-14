@@ -98,9 +98,13 @@ def softmax_backward(dA, cache):
     # s = 1 / (dA * (1 - dA))
     s = np.divide(1, (dA * (1 - dA)))
 
+    s = np.reshape(dA,(-1,1))
+
+    dZ = dA * (np.diagflat(s) - np.dot(s, s.T))
+
     assert (s.shape == Z.shape)
 
-    return s
+    return dZ
 
 
 
@@ -285,8 +289,8 @@ def compute_cost(AL, Y):
     m = Y.shape[1]
 
     # Compute loss from aL and y.
-    # cost = (-1/m) * np.sum(Y * np.log(AL) + (1 - Y) * (np.log(1 - AL))) For sigmoid activation
-    cost = (-1/m) * np.sum(Y * np.log(AL))
+    cost = - np.sum( np.multiply(Y,np.log(AL)))
+    # cost = (-1/m) * np.sum(Y * np.log(AL) + (1 - Y) * (np.log(1 - AL))) #did well?
     # cost = (1./m) * (-np.dot(Y,np.log(AL).T) - np.dot(1-Y, np.log(1-AL).T))
     
     cost = np.squeeze(cost)      # To make sure your cost's shape is what we expect (e.g. this turns [[17]] into 17).
@@ -427,22 +431,38 @@ def predict(X, y, parameters):
     
     m = X.shape[1]
     n = len(parameters) // 2 # number of layers in the neural network
-    p = np.zeros((1,m))
+    p = np.zeros((10,m))
+    correct_count = 0
     
     # Forward propagation
     probas, caches = L_model_forward(X, parameters)
 
     # convert probas to 0/1 predictions
     for i in range(0, probas.shape[1]):
-        if probas[0,i] > 0.5:
-            p[0,i] = 1
-        else:
-            p[0,i] = 0
+        #Find maximum value index
+        tmp = np.max(probas)
+        idx = 0
+        for j in range(0,9):
+            if probas[j,i] == tmp:
+                idx = j
+
+        p[idx,i] = 1
+
+        if p[-1,i] == y[-1,i]:
+            correct_count += 1
+
+        # if probas[0,i] > 0.5:
+        #     p[0,i] = 1
+        # else:
+        #     p[0,i] = 0
     
-    #print results
-    #print ("predictions: " + str(p))
-    #print ("true labels: " + str(y))
-    print("Accuracy: "  + str(np.sum((p == y)/m)))
+    # print results
+    # print ("predictions: " + str(p))
+    # print ("true labels: " + str(y))
+    print(y.shape)
+
+    print(p.shape)
+    print("Accuracy: "  + str(np.sum((correct_count)/m)))
         
     return p
 

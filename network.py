@@ -1,6 +1,6 @@
 from dnn_app_utils_v2 import *
 
-def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):
+def two_layer_model(X, Y, layers_dims, learning_rate = 0.03, num_iterations = 3000, print_cost=False):
     """
     Implements a two-layer neural network: LINEAR->RELU->LINEAR->SIGMOID.
     
@@ -50,9 +50,9 @@ def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 
         ### END CODE HERE ###
         
         # Initializing backward propagation
-        dA2 = A2 * (Y-A2)
+        # dA2 = A2 * (Y-A2)
 
-        # dA2 = - (np.divide(Y, A2) - np.divide(1 - Y, 1 - A2))
+        dA2 = - (np.divide(Y, A2) - np.divide(1 - Y, 1 - A2))
 
         #Softmax Initailizing backward progagation
         
@@ -60,7 +60,7 @@ def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 
         
         # Backward propagation. Inputs: "dA2, cache2, cache1". Outputs: "dA1, dW2, db2; also dA0 (not used), dW1, db1".
         ### START CODE HERE ### (≈ 2 lines of code)
-        dA1, dW2, db2 = linear_activation_backward(dA2, cache2, 'softmax')
+        dA1, dW2, db2 = linear_activation_backward(dA2, cache2, 'sigmoid')
         dA0, dW1, db1 = linear_activation_backward(dA1, cache1, 'relu')
         ### END CODE HERE ###
         

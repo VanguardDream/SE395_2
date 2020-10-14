@@ -12,7 +12,7 @@ import Loader
 import network as nw
 import dnn_app_utils_v2 as util
 
-macos = True
+macos = False
 
 codePath = os.path.dirname( os.path.abspath("HW1.py"))
 
@@ -36,20 +36,14 @@ tmp = fp_testImage.read(16)
 tmp = fp_testLabel.read(8)
 # -----------------------------------
 
-train_x, train_y, classes = Loader.load(50, fp_trainImage, fp_trainLabel)
-test_x, test_y, classes = Loader.load(50, fp_testImage, fp_testLabel)
-
-a = np.reshape([0, 0.1, 0.9],(3,1))
-b = np.reshape([0, 0, 1],(3,1))
-
-print(util.compute_cost(a,b))
-sys.exit()
+train_x, train_y, classes = Loader.load(100, fp_trainImage, fp_trainLabel)
+test_x, test_y, classes = Loader.load(1, fp_testImage, fp_testLabel)
 
 n_x = 28*28     # num_px * num_px * 3
 n_h = 2
 n_y = 10
 layers_dims = (n_x, n_h, n_y)
 
-parameters = nw.two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 2800, print_cost=True)
+parameters = nw.two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 200, print_cost=True)
 
 pred_train = util.predict(train_x, train_y, parameters)
