@@ -9,6 +9,11 @@ import numpy as np
 def load(batchsize, fp_img, fp_label):
     tmp_img = fp_img.read(batchsize * 784)
     tmp_label = fp_label.read(batchsize)
+    EOF = False
+
+    if tmp_img == '':
+        EOF = True
+        return
 
     classes = np.array([0,1,2,3,4,5,6,7,8,9])
 
@@ -22,4 +27,4 @@ def load(batchsize, fp_img, fp_label):
         lbl[tmp_Y[i]] = 1
         Y = np.append(Y,np.reshape(lbl,(1,10)),axis=0)
     
-    return X.T, Y.T, classes
+    return X.T, Y.T, classes, EOF
