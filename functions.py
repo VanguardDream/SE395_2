@@ -2,11 +2,6 @@ import numpy as np
 import activation
 
 def initialize_parameters(n_x = 784, h1 = 64 , h2 = 32, n_y = 10):
-    """
-    n_x : size of input (n_x, number of images)
-    h1  : number of layers (1)
-    h2  : number of layers (2)
-    """
     np.random.seed(1)
     
     W1 = np.random.randn(h1, n_x)*0.01

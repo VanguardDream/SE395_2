@@ -47,11 +47,12 @@ test_x, test_y, classes, EOF = Loader.load(1, fp_testImage, fp_testLabel)
 #         break
 
 # sys.exit()
+
 ###
 lamda = 0.005 #Learning rate
 iteration = 2500
 ###
-W1, b1, W2, b2, W3, b3 = functions.initialize_parameters(h1=100,h2=50)
+W1, b1, W2, b2, W3, b3 = functions.initialize_parameters(h1=128,h2=64)
 
 for i in range(0, iteration):
     A1, cache_1 = functions.linear_propagate(train_x, W1, b1, 'relu')
